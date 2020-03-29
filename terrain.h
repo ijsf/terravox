@@ -53,6 +53,8 @@ private:
 
     QVector<float> landform_;
     QVector<quint32> color_;
+
+    bool quantization = false;
 };
 
 #endif // TERRAIN_H

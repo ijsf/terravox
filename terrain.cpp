@@ -62,6 +62,11 @@ void Terrain::copyFrom(Terrain *t, QPoint dest, QRect src)
 
 void Terrain::quantize()
 {
+    if (!quantization)
+    {
+        return;
+    }
+
     int numCells = size_.width() * size_.height();
     auto *lf = landform_.data();
     auto maxValue = _mm_set1_ps(63.f);
