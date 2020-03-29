@@ -18,6 +18,7 @@ TerrainView::TerrainView(QWidget *parent) :
 {
     setMouseTracking(true);
     setFocusPolicy(Qt::StrongFocus);
+    setFocus();
 }
 
 TerrainView::~TerrainView()
