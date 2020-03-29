@@ -1,9 +1,7 @@
 Terravox
 ========
 
-[![Build Status](https://travis-ci.org/yvt/terravox.svg?branch=master)](https://travis-ci.org/yvt/terravox)
-
-Terravox is a heightmap Editor which can be used to create a Voxlap5 VXL data quickly.
+Terravox is a voxel heightmap editor that can be used to create a 3D heightmaps.
 
 ![](https://openspadesmedia.yvt.jp/misc/terravox/ss1.png)
 ![](https://openspadesmedia.yvt.jp/misc/terravox/shot0624.jpg)
