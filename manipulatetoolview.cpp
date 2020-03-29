@@ -1,6 +1,7 @@
 #include "manipulatetoolview.h"
 #include "manipulatetoolcontroller.h"
 #include <QMouseEvent>
+#include <QKeyEvent>
 #include "terrainview.h"
 #include "session.h"
 #include "terrain.h"
@@ -19,6 +20,8 @@ ManipulateToolView::ManipulateToolView(ManipulateMode mode, Session *session, Te
     active(false),
     cursor(Qt::SizeVerCursor)
 {
+    connect(view, SIGNAL(clientKeyPressed(QKeyEvent*)), SLOT(clientKeyPressed(QKeyEvent*)));
+    connect(view, SIGNAL(clientKeyReleased(QKeyEvent*)), SLOT(clientKeyReleased(QKeyEvent*)));
     connect(view, SIGNAL(clientMousePressed(QMouseEvent*)), SLOT(clientMousePressed(QMouseEvent*)));
     connect(view, SIGNAL(clientMouseReleased(QMouseEvent*)), SLOT(clientMouseReleased(QMouseEvent*)));
     connect(view, SIGNAL(clientMouseMoved(QMouseEvent*)), SLOT(clientMouseMoved(QMouseEvent*)));
@@ -38,6 +41,34 @@ ManipulateToolView::ManipulateToolView(ManipulateMode mode, Session *session, Te
 ManipulateToolView::~ManipulateToolView()
 {
 
+}
+
+void ManipulateToolView::clientKeyPressed(QKeyEvent *e)
+{
+    if (e->key() == Qt::Key_Q && hover && !e->isAutoRepeat() && !holdAction) {
+        holdAction = true;
+        edit = session->beginEdit();
+        if (edit) {
+            active = true;
+            dragStartY = lastY;
+            dragStartHeight = session->terrain()->landform(pos.x(), pos.y());
+            if (mode == ManipulateMode::Landform)
+                view->addCursorOverride(&cursor);
+        }
+    }
+}
+
+void ManipulateToolView::clientKeyReleased(QKeyEvent *e)
+{
+    if (e->key() == Qt::Key_Q && !e->isAutoRepeat()) {
+        holdAction = false;
+        if (active) {
+            active = false;
+            session->endEdit();
+            if (mode == ManipulateMode::Landform)
+                view->removeCursorOverride(&cursor);
+        }
+    }
 }
 
 void ManipulateToolView::clientMousePressed(QMouseEvent *e)
@@ -77,6 +108,7 @@ void ManipulateToolView::clientMouseReleased(QMouseEvent *e)
 
 void ManipulateToolView::clientMouseMoved(QMouseEvent *e)
 {
+    lastY = e->y();
     if (active && mode == ManipulateMode::Landform) {
         float height = dragStartHeight + (e->y() - dragStartY) * .07f;
         height = Terrain::quantizeOne(height);

@@ -65,6 +65,8 @@ public:
 protected:
     void paintEvent(QPaintEvent *) override;
 
+    void keyPressEvent(QKeyEvent *) override;
+    void keyReleaseEvent(QKeyEvent *) override;
     void mousePressEvent(QMouseEvent *) override;
     void mouseReleaseEvent(QMouseEvent *) override;
     void mouseMoveEvent(QMouseEvent *) override;
@@ -73,6 +75,8 @@ protected:
     void leaveEvent(QEvent *) override;
 
 signals:
+    void clientKeyPressed(QKeyEvent *);
+    void clientKeyReleased(QKeyEvent *);
     void clientMousePressed(QMouseEvent *);
     void clientMouseReleased(QMouseEvent *);
     void clientMouseMoved(QMouseEvent *);

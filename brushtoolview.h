@@ -10,6 +10,7 @@
 
 class BrushTool;
 class TerrainViewDrawingContext;
+class QKeyEvent;
 class QMouseEvent;
 class BrushToolEdit;
 class Session;
@@ -30,7 +31,9 @@ private:
     QPoint lastCursor;
     Session *session;
     bool otherActive;
+    bool holdAction = false;
 
+    QPoint lastPos;
     QPoint dragStartPos;
     QElapsedTimer elapsedTimer;
     QScopedPointer<QTimer> timer;
@@ -39,8 +42,12 @@ private:
     QScopedPointer<BrushToolEdit> currentEdit;
 
     void paint(bool interpolated = false);
+    void start(QPoint pos);
+    void end();
 
 private slots:
+    void clientKeyPressed(QKeyEvent *);
+    void clientKeyReleased(QKeyEvent *);
     void clientMousePressed(QMouseEvent *);
     void clientMouseReleased(QMouseEvent *);
     void clientMouseMoved(QMouseEvent *);

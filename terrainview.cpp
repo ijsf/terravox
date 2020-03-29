@@ -134,6 +134,16 @@ void TerrainView::paintEvent(QPaintEvent *e)
     emit clientPaint(e);
 }
 
+void TerrainView::keyPressEvent(QKeyEvent *e)
+{
+    emit clientKeyPressed(e);
+}
+
+void TerrainView::keyReleaseEvent(QKeyEvent *e)
+{
+    emit clientKeyReleased(e);
+}
+
 void TerrainView::mousePressEvent(QMouseEvent *e)
 {
     Q_D(TerrainView);

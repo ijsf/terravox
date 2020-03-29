@@ -7,6 +7,7 @@
 #include <QImage>
 #include <QCursor>
 
+class QKeyEvent;
 class QMouseEvent;
 class TerrainViewDrawingContext;
 
@@ -26,6 +27,7 @@ private:
     TerrainView *view;
     ManipulateMode mode;
 
+    bool holdAction = false;
     bool hover;
     bool otherActive;
     QPoint pos;
@@ -34,12 +36,15 @@ private:
     int dragStartY;
     float dragStartHeight;
     QSharedPointer<TerrainEdit> edit;
+    int lastY = 0;
 
     QImage highlightImage;
 
     QCursor cursor;
 
 private slots:
+    void clientKeyPressed(QKeyEvent *);
+    void clientKeyReleased(QKeyEvent *);
     void clientMousePressed(QMouseEvent *);
     void clientMouseReleased(QMouseEvent *);
     void clientMouseMoved(QMouseEvent *);

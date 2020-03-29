@@ -1,6 +1,7 @@
 #include "brushtoolview.h"
 #include "brushtool.h"
 #include <QMouseEvent>
+#include <QKeyEvent>
 #include "terrainview.h"
 #include "terrain.h"
 #include "session.h"
@@ -21,6 +22,8 @@ BrushToolView::BrushToolView(TerrainView *view, Session *session, BrushTool *too
     session(session),
     otherActive(false)
 {
+    connect(view, SIGNAL(clientKeyPressed(QKeyEvent*)), SLOT(clientKeyPressed(QKeyEvent*)));
+    connect(view, SIGNAL(clientKeyReleased(QKeyEvent*)), SLOT(clientKeyReleased(QKeyEvent*)));
     connect(view, SIGNAL(clientMousePressed(QMouseEvent*)),
             SLOT(clientMousePressed(QMouseEvent*)));
     connect(view, SIGNAL(clientMouseReleased(QMouseEvent*)),
@@ -46,14 +49,24 @@ BrushToolView::~BrushToolView()
     timer.reset();
 }
 
-void BrushToolView::clientMousePressed(QMouseEvent *e)
+void BrushToolView::clientKeyPressed(QKeyEvent *e)
 {
-    if (e->isAccepted() || e->button() != Qt::LeftButton) {
-        otherActive = true;
-        return;
+    if (e->key() == Qt::Key_Q && !e->isAutoRepeat() && !holdAction) {
+        holdAction = true;
+        start(lastPos);
     }
-    e->accept();
+}
 
+void BrushToolView::clientKeyReleased(QKeyEvent *e)
+{
+    if (e->key() == Qt::Key_Q && !e->isAutoRepeat()) {
+        holdAction = false;
+        end();
+    }
+}
+
+void BrushToolView::start(QPoint pos)
+{
     if (cursor == InvalidPoint) {
         return;
     }
@@ -66,7 +79,7 @@ void BrushToolView::clientMousePressed(QMouseEvent *e)
         return;
     }
 
-    dragStartPos = e->pos();
+    dragStartPos = pos;
 
     // make sure tool color is set to session's primary color
     {
@@ -91,7 +104,7 @@ void BrushToolView::clientMousePressed(QMouseEvent *e)
     }
 }
 
-void BrushToolView::clientMouseReleased(QMouseEvent *e)
+void BrushToolView::end()
 {
     if (currentEdit) {
         if (currentEdit->parameters().pressureMode != BrushPressureMode::Adjustable) {
@@ -105,6 +118,22 @@ void BrushToolView::clientMouseReleased(QMouseEvent *e)
         timer->stop();;
         session->endEdit();
     }
+}
+
+void BrushToolView::clientMousePressed(QMouseEvent *e)
+{
+    if (e->isAccepted() || e->button() != Qt::LeftButton) {
+        otherActive = true;
+        return;
+    }
+    e->accept();
+
+    start(e->pos());
+}
+
+void BrushToolView::clientMouseReleased(QMouseEvent *e)
+{
+    end();
     if (e->buttons() == 0) {
         otherActive = false;
     }
@@ -112,6 +141,7 @@ void BrushToolView::clientMouseReleased(QMouseEvent *e)
 
 void BrushToolView::clientMouseMoved(QMouseEvent *e)
 {
+    lastPos = e->pos();
     lastCursor = cursor;
     if (!currentEdit || currentEdit->parameters().pressureMode != BrushPressureMode::Adjustable) {
         cursor = view->rayCast(e->pos());
