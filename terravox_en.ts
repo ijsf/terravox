@@ -282,7 +282,7 @@
     </message>
     <message>
         <location filename="mainwindow.ui" line="482"/>
-        <source>&amp;Open Existing Terrain...</source>
+        <source>&amp;Open...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -410,12 +410,12 @@
     <message>
         <location filename="mainwindow.cpp" line="339"/>
         <location filename="mainwindow.cpp" line="523"/>
-        <source>Voxlap5 512x512x64 VXL (*.vxl)</source>
+        <source>Vox VXH (*.vxh)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="mainwindow.cpp" line="374"/>
-        <source>Failed to encode VXL data.</source>
+        <source>Failed to encode VXH data.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -526,11 +526,6 @@
     </message>
 </context>
 <context>
-    <name>vxl</name>
-    <message>
-        <location filename="vxl.cpp" line="59"/>
-        <source>Terrain cannot be represented as a height field. Hollow area was removed.</source>
-        <translation type="unfinished"></translation>
-    </message>
+    <name>vxh</name>
 </context>
 </TS>

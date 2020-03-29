@@ -40,6 +40,7 @@ SOURCES += main.cpp\
     brushtoolview.cpp \
     terrainviewoptionswindow.cpp \
     vxl.cpp \
+    vxh.cpp \
     dithersampler.cpp \
     temporarybuffer.cpp \
     emptytooleditor.cpp \
@@ -78,6 +79,7 @@ HEADERS  += mainwindow.h \
     brushtoolview.h \
     terrainviewoptionswindow.h \
     vxl.h \
+    vxh.h \
     dithersampler.h \
     temporarybuffer.h \
     emptytooleditor.h \

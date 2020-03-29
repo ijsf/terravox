@@ -27,7 +27,7 @@
 #include "terraingenerator.h"
 #include "terrain.h"
 
-#include "vxl.h"
+#include "vxh.h"
 
 class MainWindow::MainWindowLuaInterface : public LuaInterface
 {
@@ -336,7 +336,7 @@ bool MainWindow::saveInteractive(std::function<void (bool)> callback)
 void MainWindow::saveAsInteractive(std::function<void (bool)> callback)
 {
     QString fn = QFileDialog::getSaveFileName(this, tr("Save As"), currentFilePath,
-                                              tr("Voxlap5 512x512x64 VXL (*.vxl)"));
+                                              tr("Vox VXH (*.vxh)"));
 
     if (fn.isEmpty()) {
         callback(false);
@@ -370,8 +370,8 @@ void MainWindow::saveAsInteractive(std::function<void (bool)> callback)
 bool MainWindow::saveTo(const QString &path, QString &error)
 {
     QByteArray bytes;
-    if (!vxl::save(bytes, session->terrain().data())) {
-        error = tr("Failed to encode VXL data.");
+    if (!vxh::save(bytes, session->terrain().data())) {
+        error = tr("Failed to encode VXH data.");
         return false;
     }
 
@@ -520,7 +520,7 @@ void MainWindow::on_actionOpen_triggered()
 {
     auto doAction = [=]() {
         QString fn = QFileDialog::getOpenFileName(this, tr("Open"),
-            QString(), tr("Voxlap5 512x512x64 VXL (*.vxl)"));
+            QString(), tr("Vox VXH (*.vxh)"));
         if (fn.isEmpty())
         {
             return;
@@ -549,7 +549,7 @@ void MainWindow::on_actionOpen_triggered()
         }
 
         QString msgOut;
-        auto *t = vxl::load(bytes, msgOut);
+        auto *t = vxh::load(bytes, msgOut);
         if (!t) {
             showError(msgOut);
             return;
