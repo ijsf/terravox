@@ -44,7 +44,7 @@ void ColorModelView::paintEvent(QPaintEvent *)
 
     if (mainImage_.isNull()) {
         // FIXME: support other color model?
-        QImage img(256, 256, QImage::Format_RGB32);
+        QImage img(256, 256, QImage::Format_ARGB32);
         auto *pixels = reinterpret_cast<quint32 *>(img.bits());
         auto basecolor = QColor::fromHsv(value_.hsvHue(), 255, 255);
         auto basecolorMM = _mm_setr_epi32(basecolor.blue(), basecolor.green(), basecolor.red(), 0);
@@ -60,6 +60,9 @@ void ColorModelView::paintEvent(QPaintEvent *)
                 c = _mm_packs_epi32(c, c);
                 c = _mm_packus_epi16(c, c);
 
+                const auto alpha = _mm_setr_epi32(0xff000000, 0xff000000, 0xff000000, 0xff000000);
+                c = _mm_or_ps(c, alpha);
+
                 _mm_store_ss(reinterpret_cast<float *>(&pixels[x + y * 256]),
                         _mm_castsi128_ps(c));
 
@@ -70,7 +73,7 @@ void ColorModelView::paintEvent(QPaintEvent *)
     }
     if (sideImage_.isNull()) {
         // FIXME: support other color model?
-        QImage img(1, 360, QImage::Format_RGB32);
+        QImage img(1, 360, QImage::Format_ARGB32);
         auto *pixels = reinterpret_cast<quint32 *>(img.bits());
         for (int i = 0; i < 360; ++i) {
             pixels[i] = QColor::fromHsv(i, 255, 255).rgb();
