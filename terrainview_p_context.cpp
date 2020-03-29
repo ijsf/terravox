@@ -104,9 +104,6 @@ public:
     DrawingContext(TerrainViewPrivate &p) : p(p) {}
 
     void projectBitmap(QImage &img, const QPointF &origin, const QSizeF &size, bool additive) override {
-        if (img.format() != QImage::Format_RGB32){
-            Q_UNREACHABLE();
-        }
         struct NormalBlender {
             inline __m128i blend(__m128i src, __m128i) const {
                 return src;
