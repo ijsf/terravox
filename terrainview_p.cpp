@@ -30,6 +30,12 @@ static void transposeImage(quint32 *dest, QSize size, const quint32 *src)
 
                 _MM_TRANSPOSE4_PS(p1, p2, p3, p4);
 
+                const auto alpha = _mm_setr_epi32(0xff000000, 0xff000000, 0xff000000, 0xff000000);
+                p1 = _mm_or_ps(p1, alpha);
+                p2 = _mm_or_ps(p2, alpha);
+                p3 = _mm_or_ps(p3, alpha);
+                p4 = _mm_or_ps(p4, alpha);
+
                 auto *destptr2 = destptr;
                 _mm_storeu_ps(destptr2, p1); destptr2 += width;
                 _mm_storeu_ps(destptr2, p2); destptr2 += width;
@@ -578,7 +584,7 @@ QImage &TerrainView::TerrainViewPrivate::render(QSize size, const SceneDefinitio
     size = QSize((size.width() + 3) & ~3, (size.height() + 3) & ~3);
     if (!image_ || image_->size() != size) {
         // Regenerate image
-        image_.reset(new QImage(size, QImage::Format_RGB32));
+        image_.reset(new QImage(size, QImage::Format_ARGB32));
         depthImage_.resize(size.width() * size.height());
         heightImage_.resize(size.width() * size.height());
         transposedImage_.resize(size.width() * size.height());
